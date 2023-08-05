@@ -1,0 +1,29 @@
+{% load static %}
+<h3 class="text-decoration-underline text-center " class="font-monospace" >Articulos recientes </h3>
+  <div class="row my-4 text-center">
+    {% for article in articles %}
+    <div class="col-md-4 p-4">
+      <div class="card h-100 bg-dark text-white card-project" >
+        <img src="{{article.image.url }}" class="card-img-top" />
+        <div class="mt-3 h-100 bg-dark text-white ">
+          <h2 class="fs-5">{{ article.title }}</h2>
+          <p>Autor: <a href="{% url 'usuarios:author_detail' article.author.id %}" class="btn btn-outline-primary">{{ article.author.username }}</a></p>
+          <p>{{ article.content|striptags |truncatechars:100 }}</p>
+          {% if user.is_authenticated %}    
+          <!-- Mostrar enlaces para usuarios autenticados -->
+          <div class="btn-group" role="group"  aria-label="Basic mixed styles example">
+            <a href="{% url 'articulos:detail_article' article.id %}" class="btn btn-success">Leer</a>
+            {% if user.is_colaborador %}
+            <a href="{% url 'articulos:update_article' article.id %}" class="btn btn-warning ms-2">Editar</a>
+            <a href="{% url 'articulos:delete_article' article.id %}" class="btn btn-danger ms-2">Eliminar</a>
+            {% endif %}
+          </div>
+          {% else %}
+          <!-- Mostrar enlace para usuarios no autenticados -->
+          <a href="{% url 'articulos:detail_article' article.id %}" class="btn btn-success">Leer</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
